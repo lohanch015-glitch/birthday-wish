@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Happy Birthday, Mahnoor</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --maroon-deep:#3d0c14;
+    --maroon:#7a1b2b;
+    --maroon-soft:#b06070;
+    --maroon-mist:#f0d9dd;
+    --white:#ffffff;
+    --paper:#fffaf9;
+    --gold:#cf9a4d;
+    --shadow: 0 30px 60px -25px rgba(61,12,20,0.35);
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html,body{
+    height:100%;
+    background:#3d0c14;
+    font-family:'Poppins', sans-serif;
+    overflow:hidden;
+  }
+
+  .stage{
+    position:relative;
+    width:100%;
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .card-frame{
+    position:relative;
+    width:min(430px, 100vw);
+    height:min(764px, 100vh);
+    background:var(--paper);
+    border-radius:28px;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+  }
+
+  /* ---------- corner floral frame ---------- */
+  .floral{
+    position:absolute;
+    z-index:2;
+    opacity:0.9;
+    pointer-events:none;
+  }
+  .floral.tl{ top:0; left:0; transform:rotate(0deg); }
+  .floral.br{ bottom:0; right:0; transform:rotate(180deg); }
+
+  /* ---------- ambient hearts ---------- */
+  .heart-field{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:1;
+  }
+  .heart{
+    position:absolute;
+    opacity:0.15;
+    color:var(--maroon);
+    animation:float 9s ease-in-out infinite;
+  }
+  .heart svg{ width:100%; height:100%; display:block; }
+  @keyframes float{
+    0%,100%{ transform: translateY(0) rotate(-4deg); }
+    50%{ transform: translateY(-22px) rotate(4deg); }
+  }
+
+  /* ---------- sparkles ---------- */
+  .sparkle{
+    position:absolute;
+    width:6px; height:6px;
+    background:var(--gold);
+    border-radius:50%;
+    opacity:0;
+    animation:sparkle 2.6s ease-in-out infinite;
+    box-shadow:0 0 9px 2px rgba(207,154,77,0.85);
+    z-index:2;
+    pointer-events:none;
+  }
+  @keyframes sparkle{
+    0%{ opacity:0; transform:scale(0.3);}
+    45%{ opacity:1; transform:scale(1);}
+    100%{ opacity:0; transform:scale(0.3);}
+  }
+
+  /* ---------- glow ---------- */
+  .glow-orb{
+    position:absolute;
+    width:220px; height:220px;
+    border-radius:50%;
+    background:radial-gradient(circle, rgba(207,154,77,0.22), transparent 70%);
+    top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    z-index:1;
+    animation:pulse 4.5s ease-in-out infinite;
+    pointer-events:none;
+  }
+  @keyframes pulse{
+    0%,100%{ opacity:0.5; transform:translate(-50%,-50%) scale(0.9); }
+    50%{ opacity:1; transform:translate(-50%,-50%) scale(1.1); }
+  }
+
+  /* ---------- pages ---------- */
+  .pages{
+    position:relative;
+    width:100%;
+    height:100%;
+    z-index:3;
+  }
+  .page{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:44px 34px 78px;
+    opacity:0;
+    visibility:hidden;
+    transform:translateX(24px) scale(0.98);
+    transition:opacity .7s ease, transform .7s ease, visibility 0s linear .7s;
+  }
+  .page.active{
+    opacity:1;
+    visibility:visible;
+    transform:translateX(0) scale(1);
+    transition:opacity .7s ease, transform .7s ease, visibility 0s;
+  }
+  .page.exit-left{ transform:translateX(-24px) scale(0.98); }
+
+  .eyebrow{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-size:15px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--maroon-soft);
+    margin-bottom:14px;
+    opacity:0;
+    animation:riseIn .8s ease forwards;
+    animation-delay:.15s;
+  }
+
+  .heading{
+    font-family:'Playfair Display', serif;
+    font-weight:700;
+    font-size:clamp(28px, 7vw, 38px);
+    line-height:1.15;
+    color:var(--maroon-deep);
+    margin-bottom:22px;
+    opacity:0;
+    animation:riseIn .8s ease forwards;
+    animation-delay:.3s;
+  }
+  .heading .accent{ color:var(--gold); }
+
+  .divider{
+    width:54px;
+    height:2px;
+    background:linear-gradient(90deg, transparent, var(--maroon-soft), transparent);
+    margin:0 auto 22px;
+    opacity:0;
+    animation:riseIn .8s ease forwards;
+    animation-delay:.4s;
+  }
+
+  .msg{
+    font-family:'Poppins', sans-serif;
+    font-weight:300;
+    font-size:15.5px;
+    line-height:1.85;
+    color:var(--maroon);
+    max-width:320px;
+    opacity:0;
+    animation:riseIn .8s ease forwards;
+    animation-delay:.55s;
+  }
+  .msg strong{ font-weight:500; color:var(--maroon-deep); }
+  .msg + .msg{ margin-top:16px; }
+
+  .dua-box{
+    margin-top:20px;
+    padding:18px 20px;
+    border:1px solid rgba(122,27,43,0.18);
+    border-radius:14px;
+    background:rgba(122,27,43,0.045);
+    opacity:0;
+    animation:riseIn .8s ease forwards;
+    animation-delay:.75s;
+  }
+  .dua-label{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-size:14px;
+    color:var(--gold);
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    margin-bottom:8px;
+  }
+
+  @keyframes riseIn{
+    from{ opacity:0; transform:translateY(14px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+
+  /* ---------- page 3 cake scene ---------- */
+  .cake-wrap{
+    position:relative;
+    width:160px;
+    height:160px;
+    margin-bottom:18px;
+    opacity:0;
+    animation:riseIn .9s ease forwards;
+    animation-delay:.2s;
+    z-index:2;
+  }
+  .flame{
+    animation:flicker 1.4s ease-in-out infinite;
+    transform-origin:center bottom;
+  }
+  @keyframes flicker{
+    0%,100%{ transform:scale(1) rotate(0deg); }
+    50%{ transform:scale(1.15) rotate(-3deg); }
+  }
+
+  .final-name{
+    font-family:'Playfair Display', serif;
+    font-style:italic;
+    font-weight:600;
+    color:var(--maroon);
+  }
+
+  /* ---------- nav dots ---------- */
+  .dots{
+    position:absolute;
+    bottom:34px;
+    left:0; right:0;
+    display:flex;
+    justify-content:center;
+    gap:9px;
+    z-index:5;
+  }
+  .dot{
+    width:7px; height:7px;
+    border-radius:50%;
+    background:rgba(122,27,43,0.25);
+    transition:all .35s ease;
+    cursor:pointer;
+  }
+  .dot.active{
+    width:22px;
+    border-radius:5px;
+    background:var(--maroon);
+  }
+
+  /* ---------- tap zones ---------- */
+  .tap-zone{
+    position:absolute;
+    top:0; bottom:60px;
+    width:32%;
+    z-index:4;
+    cursor:pointer;
+  }
+  .tap-zone.left{ left:0; }
+  .tap-zone.right{ right:0; }
+
+  .hint{
+    position:absolute;
+    bottom:56px;
+    left:0; right:0;
+    text-align:center;
+    font-family:'Poppins', sans-serif;
+    font-size:10.5px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--maroon-soft);
+    opacity:0.55;
+    z-index:5;
+    pointer-events:none;
+    animation:hintFade 2.4s ease-in-out infinite;
+  }
+  @keyframes hintFade{
+    0%,100%{ opacity:0.25; }
+    50%{ opacity:0.6; }
+  }
+  .page3.active ~ .hint{ display:none; }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="card-frame" id="cardFrame">
+
+    <!-- corner floral accents -->
+    <svg class="floral tl" width="120" height="120" viewBox="0 0 120 120">
+      <g fill="none" stroke="#7a1b2b" stroke-width="1.4" opacity="0.5">
+        <path d="M10 10 C30 10 30 30 50 30" />
+        <circle cx="14" cy="14" r="6" fill="#7a1b2b" opacity="0.35" stroke="none"/>
+        <circle cx="30" cy="10" r="4" fill="#cf9a4d" opacity="0.5" stroke="none"/>
+        <circle cx="42" cy="26" r="3" fill="#7a1b2b" opacity="0.3" stroke="none"/>
+        <path d="M10 26 C18 40 6 44 14 56" />
+      </g>
+    </svg>
+    <svg class="floral br" width="120" height="120" viewBox="0 0 120 120">
+      <g fill="none" stroke="#7a1b2b" stroke-width="1.4" opacity="0.5">
+        <path d="M10 10 C30 10 30 30 50 30" />
+        <circle cx="14" cy="14" r="6" fill="#7a1b2b" opacity="0.35" stroke="none"/>
+        <circle cx="30" cy="10" r="4" fill="#cf9a4d" opacity="0.5" stroke="none"/>
+        <circle cx="42" cy="26" r="3" fill="#7a1b2b" opacity="0.3" stroke="none"/>
+        <path d="M10 26 C18 40 6 44 14 56" />
+      </g>
+    </svg>
+
+    <div class="glow-orb"></div>
+    <div class="heart-field" id="heartField"></div>
+
+    <div class="pages">
+
+      <!-- PAGE 1 -->
+      <section class="page page1 active" data-page="1">
+        <div class="eyebrow">A little something for</div>
+        <h1 class="heading">🎉 Happy Birthday,<br><span class="accent">Mahnoor</span>! 🎉</h1>
+        <div class="divider"></div>
+        <p class="msg">Today is a beautiful day because it's the birthday of someone truly special.</p>
+        <p class="msg">Dear <strong>Mahnoor</strong>, may your birthday be filled with endless happiness, beautiful memories, genuine smiles, and unforgettable moments. You deserve every joy, every blessing, and all the love in the world.</p>
+        <p class="msg">May this new year of your life bring success, peace, laughter, good health, and countless reasons to smile every single day.</p>
+      </section>
+
+      <!-- PAGE 2 -->
+      <section class="page page2" data-page="2">
+        <div class="eyebrow">With love, always</div>
+        <h1 class="heading">❤️ Best Wishes<br>&amp; <span class="accent">Dua</span> ❤️</h1>
+        <div class="divider"></div>
+        <p class="msg">Happy Birthday to my amazing friend!</p>
+        <p class="msg">Thank you for always being such a kind, caring, and wonderful person. Your friendship means so much, and I pray that your life is always filled with happiness and blessings.</p>
+        <div class="dua-box">
+          <div class="dua-label">Dua</div>
+          <p class="msg" style="margin:0; max-width:none;">May Allah bless you with a long and beautiful life, good health, endless happiness, success in every step, peace in your heart, and barakah in everything you do. May all your dreams come true, and may Allah always protect and guide you. Ameen. 🤲❤️</p>
+        </div>
+      </section>
+
+      <!-- PAGE 3 -->
+      <section class="page page3" data-page="3">
+        <div class="cake-wrap">
+          <svg viewBox="0 0 160 160" width="160" height="160">
+            <ellipse cx="80" cy="136" rx="56" ry="8" fill="#7a1b2b" opacity="0.08"/>
+            <!-- plate -->
+            <ellipse cx="80" cy="126" rx="47" ry="7" fill="#f0d9dd"/>
+            <!-- bottom tier -->
+            <rect x="37" y="94" width="86" height="32" rx="4" fill="#7a1b2b"/>
+            <rect x="37" y="94" width="86" height="6" fill="#ffffff" opacity="0.9"/>
+            <!-- gold trim -->
+            <rect x="37" y="104" width="86" height="2" fill="#cf9a4d" opacity="0.7"/>
+            <!-- top tier -->
+            <rect x="53" y="66" width="54" height="30" rx="4" fill="#3d0c14"/>
+            <rect x="53" y="66" width="54" height="6" fill="#ffffff" opacity="0.9"/>
+            <rect x="53" y="77" width="54" height="2" fill="#cf9a4d" opacity="0.7"/>
+            <!-- hearts on cake -->
+            <path d="M80 82 c-3-5-10-4-10 1c0 4 6 8 10 12c4-4 10-8 10-12c0-5-7-6-10-1z" fill="#cf9a4d"/>
+            <path d="M56 106 c-2-3-6-3-6 1c0 2.5 3.5 5 6 7.5c2.5-2.5 6-5 6-7.5c0-4-4-4-6-1z" fill="#ffffff" opacity="0.95"/>
+            <path d="M104 106 c-2-3-6-3-6 1c0 2.5 3.5 5 6 7.5c2.5-2.5 6-5 6-7.5c0-4-4-4-6-1z" fill="#ffffff" opacity="0.95"/>
+            <!-- candle -->
+            <rect x="75" y="44" width="8" height="22" rx="2" fill="#f0d9dd"/>
+            <g class="flame">
+              <path d="M79 32 c-4 5 -4 9 0 13 c4 -4 4 -8 0 -13z" fill="#cf9a4d"/>
+              <path d="M79 36 c-2 3 -2 5.5 0 8 c2 -2.5 2 -5 0 -8z" fill="#fff4d6"/>
+            </g>
+          </svg>
+        </div>
+        <h1 class="heading">🎂 Happy Birthday,<br><span class="final-name">Mahnoor</span>! 🎂</h1>
+        <div class="divider"></div>
+        <p class="msg">May your smile always shine brightly, and may this year become the most beautiful chapter of your life.</p>
+        <p class="msg">Wishing you endless love, happiness, success, laughter, unforgettable memories, and Allah's countless blessings.</p>
+        <p class="msg" style="margin-top:18px; font-family:'Playfair Display', serif; font-style:italic; font-weight:600; font-size:17px; color:var(--maroon-deep);">Have the most wonderful birthday ever! ❤️✨</p>
+      </section>
+
+    </div>
+
+    <div class="tap-zone left" onclick="goTo(currentPage-1)"></div>
+    <div class="tap-zone right" onclick="goTo(currentPage+1)"></div>
+
+    <div class="dots">
+      <div class="dot active" data-idx="0" onclick="goTo(1)"></div>
+      <div class="dot" data-idx="1" onclick="goTo(2)"></div>
+      <div class="dot" data-idx="2" onclick="goTo(3)"></div>
+    </div>
+
+    <div class="hint">tap to continue →</div>
+
+  </div>
+</div>
+
+<script>
+  const totalPages = 3;
+  let currentPage = 1;
+  const pages = document.querySelectorAll('.page');
+  const dots = document.querySelectorAll('.dot');
+  const frame = document.getElementById('cardFrame');
+
+  function goTo(n){
+    if(n < 1 || n > totalPages || n === currentPage) return;
+    const dir = n > currentPage ? 1 : -1;
+    pages[currentPage-1].classList.remove('active');
+    pages[currentPage-1].classList.add(dir === 1 ? 'exit-left' : '');
+    setTimeout(()=>{ pages[currentPage-1].classList.remove('exit-left'); }, 720);
+    currentPage = n;
+    pages[currentPage-1].classList.add('active');
+    const kids = pages[currentPage-1].querySelectorAll('.eyebrow,.heading,.divider,.msg,.dua-box,.cake-wrap');
+    kids.forEach(el=>{ el.style.animation='none'; el.offsetHeight; el.style.animation=''; });
+    dots.forEach((d,i)=> d.classList.toggle('active', i === currentPage-1));
+  }
+
+  let touchStartX = 0;
+  frame.addEventListener('touchstart', e=>{ touchStartX = e.changedTouches[0].screenX; });
+  frame.addEventListener('touchend', e=>{
+    const dx = e.changedTouches[0].screenX - touchStartX;
+    if(Math.abs(dx) > 40){ dx < 0 ? goTo(currentPage+1) : goTo(currentPage-1); }
+  });
+
+  // ---------- ambient hearts generator ----------
+  const heartField = document.getElementById('heartField');
+  const heartSVG = (opacity) => `
+    <svg viewBox="0 0 32 29" xmlns="http://www.w3.org/2000/svg">
+      <path fill="currentColor" opacity="${opacity}" d="M16 29 C4 20 0 13 0 8 C0 3 4 0 8 0 C11 0 14 2 16 5 C18 2 21 0 24 0 C28 0 32 3 32 8 C32 13 28 20 16 29 Z"/>
+    </svg>`;
+
+  const heartPositions = [
+    {top:'6%', left:'10%', size:26, delay:'0s', dur:'8s'},
+    {top:'14%', left:'78%', size:18, delay:'1.2s', dur:'10s'},
+    {top:'28%', left:'4%', size:14, delay:'2s', dur:'7s'},
+    {top:'40%', left:'88%', size:22, delay:'.5s', dur:'9s'},
+    {top:'58%', left:'8%', size:20, delay:'1.8s', dur:'11s'},
+    {top:'70%', left:'82%', size:16, delay:'.9s', dur:'8.5s'},
+    {top:'85%', left:'14%', size:24, delay:'2.4s', dur:'9.5s'},
+    {top:'92%', left:'70%', size:18, delay:'1.5s', dur:'7.5s'},
+    {top:'2%', left:'45%', size:14, delay:'.3s', dur:'8s'},
+    {top:'50%', left:'50%', size:12, delay:'2.6s', dur:'10s'},
+  ];
+
+  heartPositions.forEach(p=>{
+    const div = document.createElement('div');
+    div.className = 'heart';
+    div.style.top = p.top;
+    div.style.left = p.left;
+    div.style.width = p.size + 'px';
+    div.style.height = (p.size*0.9) + 'px';
+    div.style.animationDelay = p.delay;
+    div.style.animationDuration = p.dur;
+    div.innerHTML = heartSVG(1);
+    heartField.appendChild(div);
+  });
+
+  // ---------- sparkles ----------
+  function spawnSparkle(){
+    const s = document.createElement('div');
+    s.className = 'sparkle';
+    s.style.top = (Math.random()*90+3) + '%';
+    s.style.left = (Math.random()*90+3) + '%';
+    s.style.animationDuration = (1.8 + Math.random()*1.6) + 's';
+    heartField.appendChild(s);
+    setTimeout(()=> s.remove(), 3600);
+  }
+  setInterval(spawnSparkle, 550);
+</script>
+
+</body>
+</html>
